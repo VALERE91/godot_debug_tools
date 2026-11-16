@@ -1,0 +1,54 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: macos-latest, platform: macos, arch: universal }
+          - { os: windows-latest, platform: windows, arch: x86_64 }
+          - { os: ubuntu-22.04, platform: linux, arch: x86_64 }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install scons
+      - run: scons platform=${{ matrix.platform }} arch=${{ matrix.arch }} target=template_debug -j4
+      - run: scons platform=${{ matrix.platform }} arch=${{ matrix.arch }} target=template_release -j4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bin-${{ matrix.platform }}
+          path: project/addons/debug_tools/bin/
+
+  # One zip with addons/debug_tools/ for all platforms (the template catalog fetches it as a release asset).
+  package:
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write # create the GitHub release on tags
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bin-*
+          path: project/addons/debug_tools/bin/
+          merge-multiple: true
+      - run: cd project && zip -r ../debug_tools.zip addons/debug_tools -x '*.lib' '*.exp' '*.pdb'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debug_tools
+          path: debug_tools.zip
+      - if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: debug_tools.zip

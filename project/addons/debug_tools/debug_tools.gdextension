@@ -1,0 +1,13 @@
+[configuration]
+
+entry_symbol = "debug_tools_init"
+compatibility_minimum = "4.7"
+
+[libraries]
+
+macos.debug = "res://addons/debug_tools/bin/libdebug_tools.macos.template_debug.framework"
+macos.release = "res://addons/debug_tools/bin/libdebug_tools.macos.template_release.framework"
+windows.debug.x86_64 = "res://addons/debug_tools/bin/libdebug_tools.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/debug_tools/bin/libdebug_tools.windows.template_release.x86_64.dll"
+linux.debug.x86_64 = "res://addons/debug_tools/bin/libdebug_tools.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/debug_tools/bin/libdebug_tools.linux.template_release.x86_64.so"

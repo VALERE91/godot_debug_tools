@@ -1,0 +1,19 @@
+# SCons / build output
+.sconsign*.dblite
+*.o
+*.os
+*.obj
+*.lib
+*.exp
+*.pdb
+compile_commands.json
+project/addons/debug_tools/bin/
+
+# Godot
+project/.godot/
+
+# OS
+.DS_Store
+
+# GodotHub project metadata
+.godothub/
