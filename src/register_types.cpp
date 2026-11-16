@@ -23,10 +23,12 @@ void initialize_debug_tools(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(DebugDraw3D);
 	GDREGISTER_CLASS(DebugDraw2D);
 	GDREGISTER_CLASS(ImGuiAPI);
+	GDREGISTER_INTERNAL_CLASS(ImGuiInputNode);
 
 	debug_draw_3d = memnew(DebugDraw3D);
 	debug_draw_2d = memnew(DebugDraw2D);
 	imgui_api = memnew(ImGuiAPI);
+	imgui_api->pre_render = [] { DebugDraw2D::singleton->draw_graphs(); };
 	Engine::get_singleton()->register_singleton("DebugDraw3D", debug_draw_3d);
 	Engine::get_singleton()->register_singleton("DebugDraw2D", debug_draw_2d);
 	Engine::get_singleton()->register_singleton("ImGui", imgui_api);

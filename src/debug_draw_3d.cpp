@@ -1,5 +1,8 @@
 #include "debug_draw_3d.h"
 
+#include "debug_draw_2d.h"
+
+#include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/display_server.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/os.hpp>
@@ -183,6 +186,15 @@ void DebugDraw3D::capsule(const Vector3 &p_a, const Vector3 &p_b, double p_radiu
 	}
 }
 
+void DebugDraw3D::text(const Vector3 &p_position, const String &p_text, const Color &p_color) {
+	SceneTree *tree = Object::cast_to<SceneTree>(Engine::get_singleton()->get_main_loop());
+	Camera3D *camera = tree && tree->get_root() ? tree->get_root()->get_camera_3d() : nullptr;
+	if (!enabled || !DebugDraw2D::singleton || !camera || camera->is_position_behind(p_position)) {
+		return;
+	}
+	DebugDraw2D::singleton->text(camera->unproject_position(p_position), p_text, p_color);
+}
+
 void DebugDraw3D::clear() {
 	std::lock_guard<std::mutex> lock(mutex);
 	segments.clear();
@@ -289,6 +301,7 @@ void DebugDraw3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("box", "xform", "color", "duration"), &DebugDraw3D::box, DEFVAL(red), DEFVAL(0.0));
 	ClassDB::bind_method(D_METHOD("sphere", "center", "radius", "color", "duration"), &DebugDraw3D::sphere, DEFVAL(0.5), DEFVAL(red), DEFVAL(0.0));
 	ClassDB::bind_method(D_METHOD("capsule", "a", "b", "radius", "color", "duration"), &DebugDraw3D::capsule, DEFVAL(0.5), DEFVAL(red), DEFVAL(0.0));
+	ClassDB::bind_method(D_METHOD("text", "position", "text", "color"), &DebugDraw3D::text, DEFVAL(Color(1, 1, 1)));
 	ClassDB::bind_method(D_METHOD("clear"), &DebugDraw3D::clear);
 	ClassDB::bind_method(D_METHOD("set_depth_test", "enabled"), &DebugDraw3D::set_depth_test);
 	ClassDB::bind_method(D_METHOD("get_depth_test"), &DebugDraw3D::get_depth_test);

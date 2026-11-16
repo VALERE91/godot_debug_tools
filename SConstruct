@@ -7,7 +7,7 @@ env = SConscript("godot-cpp/SConstruct", {"api_version": "4.7"})
 
 IMGUI = "thirdparty/imgui/"
 env.Append(CPPPATH=["src/", IMGUI])
-env.Append(CPPDEFINES=["IMGUI_DISABLE_OBSOLETE_FUNCTIONS"])
+env.Append(CPPDEFINES=[("IMGUI_USER_CONFIG", r'\"imgui_config.h\"')])  # src/imgui_config.h
 
 # Objects go to build/, not next to the sources: that would dirty the imgui submodule.
 imgui_objects = [

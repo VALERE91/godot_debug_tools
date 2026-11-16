@@ -31,6 +31,8 @@ public:
 	void box(const godot::Transform3D &p_xform, const godot::Color &p_color, double p_duration);
 	void sphere(const godot::Vector3 &p_center, double p_radius, const godot::Color &p_color, double p_duration);
 	void capsule(const godot::Vector3 &p_a, const godot::Vector3 &p_b, double p_radius, const godot::Color &p_color, double p_duration);
+	// Screen-space label at a world position (via DebugDraw2D). Per frame only, no duration.
+	void text(const godot::Vector3 &p_position, const godot::String &p_text, const godot::Color &p_color);
 	void clear();
 
 	void set_depth_test(bool p_enabled);
