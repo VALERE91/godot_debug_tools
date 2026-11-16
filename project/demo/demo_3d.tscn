@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demo/demo_3d.gd" id="1_demo"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+size = Vector2(12, 12)
+
+[node name="Demo3D" type="Node3D"]
+script = ExtResource("1_demo")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_floor")
