@@ -9,9 +9,12 @@ IMGUI = "thirdparty/imgui/"
 env.Append(CPPPATH=["src/", IMGUI])
 env.Append(CPPDEFINES=["IMGUI_DISABLE_OBSOLETE_FUNCTIONS"])
 
-sources = Glob("src/*.cpp") + [
-    IMGUI + f for f in ["imgui.cpp", "imgui_draw.cpp", "imgui_tables.cpp", "imgui_widgets.cpp", "imgui_demo.cpp"]
+# Objects go to build/, not next to the sources: that would dirty the imgui submodule.
+imgui_objects = [
+    env.SharedObject("build/imgui/{}.{}".format(f, env["target"]), IMGUI + f + ".cpp")
+    for f in ["imgui", "imgui_draw", "imgui_tables", "imgui_widgets", "imgui_demo"]
 ]
+sources = Glob("src/*.cpp") + imgui_objects
 
 BIN = "project/addons/debug_tools/bin/"
 if env["platform"] == "macos":
