@@ -19,3 +19,4 @@ project/.godot/
 # GodotHub project metadata
 .godothub/
 CLAUDE.md
+.cache
